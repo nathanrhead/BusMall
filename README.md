@@ -20,5 +20,11 @@ Submission PR
 ## Reflections and Comments
 
 
+### Questions that occurred to me during the build
+
+* Render function: I don't understand how the parameter "imageElement" ties "imageElement.src = allProducts[randomIndex].filepath;" and "imageElement.alt = allProducts[randomIndex].name;" to the invoked function render with agrument of imageOneElment, imageTwoElement, and imageThreeElement. 
+
+* Also, why don't imageElement.alt and imageElement.src need variables? What are they called when they're just part of a function without being a variable?
+
 
 © nathanrhead
