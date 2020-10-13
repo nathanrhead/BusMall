@@ -10,9 +10,13 @@
 
 // This global variable holds the array of all products, populated with the name, filepath, and number of votes of each product by the constructor function "Product."
 var allProducts = [];
+console.log(allProducts);
 
 // This global variable holds the array of recent random numbers, used to compare against a new random number, so that the same product image won't be repeated on one page.
 var recentRandomNumber = [];
+
+var randomNumberSets = [];
+console.log('This is the set of random numbers:', randomNumberSets);
 
 // This is the parent element used to place the event listener on the DOM.
 var writeNewRandomImages = document.getElementById('product-images');
@@ -35,21 +39,14 @@ var k = 0;
 function Product(productName, filepath) {
   this.product = productName;
   this.filepath = filepath;
-
   // 2.1 In the constructor function define a property to hold the number of times a product has been clicked.
   this.votes = 0;
+  this.productDisplayCount = 0;
 
-  // 4.1: Create a property attached to the constructor function itself that keeps track of all the products that are currently being considered.
-  // this.moreThanZeroVotes = 
+  // 4.1: Create a property attached to the constructor function itself that keeps track of all the products that are currently being considered. [Not sure how to do this or what is being asked; created a running array of random numbers as a global variable called randomNumberSets.]
 
-  allProducts.push(this); // Pushes the data processed by the constructor function into a global variable that holds an array.
-
-  // Product.prototype.productsWithVotes = function() {
-  //   for(var i = 0; i < allProducts.length; i++) {
-  //   if(this.votes !==0) {
-
-  //   }
-  // }
+  // Pushes the data processed by the constructor function into a global variable that holds an array.
+  allProducts.push(this);
 
 }
 //These are all of my object instances, which will feed the needed two arguments into the constructor function "Product", which in turn will populate the global variable "allProducts," which is an arry.
@@ -83,22 +80,32 @@ function render() {
     randomIndex1 = getRandomNumber(0, allProducts.length - 1);
   } while (recentRandomNumber.includes(randomIndex1));
 
+  allProducts[randomIndex1].productDisplayCount++;
+
   recentRandomNumber.push(randomIndex1);
+  randomNumberSets.push(randomIndex1);
 
   var randomIndex2;
   do {
     randomIndex2 = getRandomNumber(0, allProducts.length - 1);
   } while (recentRandomNumber.includes(randomIndex2));
 
+  allProducts[randomIndex2].productDisplayCount++;
+
   recentRandomNumber.push(randomIndex2);
+  randomNumberSets.push(randomIndex2);
 
   var randomIndex3;
   do {
     randomIndex3 = getRandomNumber(0, allProducts.length - 1);
   } while (recentRandomNumber.includes(randomIndex3));
 
+  allProducts[randomIndex3].productDisplayCount++;
+
   recentRandomNumber.push(randomIndex3);
-  // console.log(recentRandomNumber); // this is always only three new numbers.
+  randomNumberSets.push(randomIndex3);
+
+  // console.log(recentRandomNumber); // This shows the last six new numbers (the current and penultimate set).
 
   recentRandomNumber = [randomIndex1, randomIndex2, randomIndex3];
 
@@ -134,12 +141,14 @@ function handleClick(event) {
     render();
     // 2.2: After every selection by the viewer, update the newly added property to reflect if it was clicked.
     var productVote = event.target.alt;
+
     for (var i = 0; i < allProducts.length; i++) {
       if(productVote === allProducts[i].product) {
         allProducts[i].votes++;
       }
     }
   }
+
 }
 
 
