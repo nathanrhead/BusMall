@@ -25,6 +25,8 @@ var writeNewRandomImages = document.getElementById('product-images');
 var imageOneElement = document.getElementById('imageOne');
 var imageTwoElement = document.getElementById('imageTwo');
 var imageThreeElement = document.getElementById('imageThree');
+var resultParentElement = document.getElementById('results');
+var renderResultsElement = document.getElementById('submit-button');
 
 // This global variable is a counter for the event listener.
 var k = 0;
@@ -125,8 +127,9 @@ function getRandomNumber(min, max){
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-// This function is the event listener.
+// This function is the event listener for clicks of the pictures.
 function handleClick(event) {
+  event.preventDefault();
   // This removes the event listener. (In the case of this code base, it's redundant, because the maxClick variable's if statement immedidately following turns it off; but it's here per instructions and to imitate scalability.)
   if (k >= 5) {
     writeNewRandomImages.removeEventListener('click', handleClick);
@@ -148,13 +151,34 @@ function handleClick(event) {
       }
     }
   }
+}
+
+//This function is the event listener for the sumbit results button.
+function submitResults(event) {
+  event.preventDefault();
+  renderPollResults();
 
 }
 
+//This method writes the results to the DOM.
+Product.prototype.renderResults = function() {
+  var liElement = document.createElement('li');
+  liElement.textContent = `The ${this.product} product received ${this.vote} votes after being shown ${this.productDisplayCount} times.`;
+  resultParentElement.appendChild(liElement);
+};
+
+function renderPollResults() {
+  for (var j = 0; j < allProducts.length; j++) {
+    allProducts[j].renderResults();
+  }
+}
 
 // 1.3 Attach an event listener to the section of the HTML page where the images are going to be displayed.
 writeNewRandomImages.addEventListener('click', handleClick);
 
+//4.3 Add a button with the text View Results, which when clicked displays the list of all the products followed by the votes received, and number of times seen for each.
+renderResultsElement.addEventListener('submit', submitResults);
 
 // These are the file's executable functions
 render();
+// renderPollResults();
