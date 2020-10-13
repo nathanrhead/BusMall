@@ -1,10 +1,15 @@
 'use strict';
 
-// I. Global variables
+// Goal 1: As a user, I would like to display three unique products by chance so that my viewers can pick a favorite.
+
+// Goal 2: As a user, I would like to track the selections made by viewers so that I can determine which products to keep for the catalog.
+
+// Goal 3: As a user, I would like to control the number of rounds a user is presented with so that I can control the voting session duration.
+
+// Goal 4: As a user, I would like to view a report of results after all rounds of voting have concluded so that I can evaluate which products were the most popular.
 
 // This global variable holds the array of all products, populated with the name, filepath, and number of votes of each product by the constructor function "Product."
 var allProducts = [];
-// console.log('The allProducts array:', allProducts);
 
 // This global variable holds the array of recent random numbers, used to compare against a new random number, so that the same product image won't be repeated on one page.
 var recentRandomNumber = [];
@@ -17,7 +22,9 @@ var imageOneElement = document.getElementById('imageOne');
 var imageTwoElement = document.getElementById('imageTwo');
 var imageThreeElement = document.getElementById('imageThree');
 
-// Goal 1: As a user, I would like to display three unique products by chance so that my viewers can pick a favorite.
+// This global variable is a counter for the event listener.
+var k = 0;
+
 
 // Feature tasks:
 
@@ -28,11 +35,23 @@ var imageThreeElement = document.getElementById('imageThree');
 function Product(productName, filepath) {
   this.product = productName;
   this.filepath = filepath;
+
+  // 2.1 In the constructor function define a property to hold the number of times a product has been clicked.
   this.votes = 0;
 
-  allProducts.push(this);
-}
+  // 4.1: Create a property attached to the constructor function itself that keeps track of all the products that are currently being considered.
+  // this.moreThanZeroVotes = 
 
+  allProducts.push(this); // Pushes the data processed by the constructor function into a global variable that holds an array.
+
+  // Product.prototype.productsWithVotes = function() {
+  //   for(var i = 0; i < allProducts.length; i++) {
+  //   if(this.votes !==0) {
+
+  //   }
+  // }
+
+}
 //These are all of my object instances, which will feed the needed two arguments into the constructor function "Product", which in turn will populate the global variable "allProducts," which is an arry.
 new Product('bag', 'img/bag.jpg');
 new Product('banana', 'img/banana.jpg');
@@ -58,6 +77,7 @@ new Product('wine-glass', 'img/wine-glass.jpg');
 // 1.2 Create an algorithm that will randomly generate three unique product images from the images directory and display them side-by-side-by-side in the browser window.
 
 function render() {
+
   var randomIndex1;
   do {
     randomIndex1 = getRandomNumber(0, allProducts.length - 1);
@@ -79,41 +99,53 @@ function render() {
 
   recentRandomNumber.push(randomIndex3);
   // console.log(recentRandomNumber); // this is always only three new numbers.
+
   recentRandomNumber = [randomIndex1, randomIndex2, randomIndex3];
 
   imageOneElement.src = allProducts[randomIndex1].filepath;
-  imageOneElement.alt = allProducts[randomIndex1].name;
+  imageOneElement.alt = allProducts[randomIndex1].product;
 
   imageTwoElement.src = allProducts[randomIndex2].filepath;
-  imageTwoElement.alt = allProducts[randomIndex2].name;
+  imageTwoElement.alt = allProducts[randomIndex2].product;
 
   imageThreeElement.src = allProducts[randomIndex3].filepath;
-  imageThreeElement.alt = allProducts[randomIndex3].name;
-
-  // console.log('this is the recentRandomNumer array at the end of the function', recentRandomNumber); // this is six numbers after the first click.
-
+  imageThreeElement.alt = allProducts[randomIndex3].product;
 }
 
-
-// Helper function: generates a random number between a min and a max, inclusive, and rounds it down to the nearest whole number.
+// Helper functions
+// This generates a random number between a min and a max, inclusive, and rounds it down to the nearest whole number.
 function getRandomNumber(min, max){
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-// 1.3 Attach an event listener to the section of the HTML page where the images are going to be displayed.
-writeNewRandomImages.addEventListener('click', function(event) {
-  // 1.4 Once the user ‘clicks’ a product, generate three new products for the user to pick from.
-  render();
+// This function is the event listener.
+function handleClick(event) {
+  // This removes the event listener. (In the case of this code base, it's redundant, because the maxClick variable's if statement immedidately following turns it off; but it's here per instructions and to imitate scalability.)
+  if (k >= 5) {
+    writeNewRandomImages.removeEventListener('click', handleClick);
+  }
+  // 3.1: By default, the user should be presented with 25 rounds of voting before ending the session.
+  // 3.2: Keep the number of rounds in a variable to allow the number to be easily changed for debugging and testing purposes.
+  var maxClick = 5;
+  if (k < maxClick) {
+    k++;
 
-  var productVote = event.target.alt;
-  for (var i = 0; i < allProducts.length; i++) {
-    if(productVote === allProducts[i].alt) {
-      allProducts[i].votes++;
+    // 1.4: Once the user ‘clicks’ a product, generate three new products for the user to pick from.
+    render();
+    // 2.2: After every selection by the viewer, update the newly added property to reflect if it was clicked.
+    var productVote = event.target.alt;
+    for (var i = 0; i < allProducts.length; i++) {
+      if(productVote === allProducts[i].product) {
+        allProducts[i].votes++;
+      }
     }
   }
-});
+}
+
+
+// 1.3 Attach an event listener to the section of the HTML page where the images are going to be displayed.
+writeNewRandomImages.addEventListener('click', handleClick);
+
 
 // These are the file's executable functions
-
 render();
-
