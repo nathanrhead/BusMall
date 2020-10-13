@@ -163,7 +163,7 @@ function submitResults(event) {
 //This method writes the results to the DOM.
 Product.prototype.renderResults = function() {
   var liElement = document.createElement('li');
-  liElement.textContent = `The ${this.product} product received ${this.vote} votes after being shown ${this.productDisplayCount} times.`;
+  liElement.textContent = `The ${this.product} product received ${this.votes} votes after being shown ${this.productDisplayCount} times.`;
   resultParentElement.appendChild(liElement);
 };
 
