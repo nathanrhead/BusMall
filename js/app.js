@@ -177,7 +177,7 @@ function renderPollResults() {
 writeNewRandomImages.addEventListener('click', handleClick);
 
 //4.3 Add a button with the text View Results, which when clicked displays the list of all the products followed by the votes received, and number of times seen for each.
-renderResultsElement.addEventListener('submit', submitResults);
+renderResultsElement.addEventListener('click', submitResults);
 
 // These are the file's executable functions
 render();
