@@ -1,57 +1,30 @@
 'use strict';
 
-// Goal 1: As a user, I would like to display three unique products by chance so that my viewers can pick a favorite.
+// Global variables.
 
-// Goal 2: As a user, I would like to track the selections made by viewers so that I can determine which products to keep for the catalog.
+var allProducts = []; //Array holding data for each object instance.
+var recentRandomNumber = []; //Array holding the last six random numbers generated.
+var randomNumberSets = []; //Array holding all of the random numbers for this session.
 
-// Goal 3: As a user, I would like to control the number of rounds a user is presented with so that I can control the voting session duration.
+var imageOneElement = document.getElementById('imageOne'); //Writes image one to the DOM.
+var imageTwoElement = document.getElementById('imageTwo'); //Writes image two to the DOM.
+var imageThreeElement = document.getElementById('imageThree'); //Writes image three to the DOM.
 
-// Goal 4: As a user, I would like to view a report of results after all rounds of voting have concluded so that I can evaluate which products were the most popular.
+var writeNewRandomImages = document.getElementById('product-images'); //Writes click event listener to the DOM.
 
-// This global variable holds the array of all products, populated with the name, filepath, and number of votes of each product by the constructor function "Product."
-var allProducts = [];
-console.log(allProducts);
+var maxClick = 0; // This is a counter for the event listener that tracks the number of clicks, up to 25.
 
-// This global variable holds the array of recent random numbers, used to compare against a new random number, so that the same product image won't be repeated on one page.
-var recentRandomNumber = [];
-
-var randomNumberSets = [];
-console.log('This is the set of random numbers:', randomNumberSets);
-
-// This is the parent element used to place the event listener on the DOM.
-var writeNewRandomImages = document.getElementById('product-images');
-
-// These global variables are used to write each of three random images to the DOM.
-var imageOneElement = document.getElementById('imageOne');
-var imageTwoElement = document.getElementById('imageTwo');
-var imageThreeElement = document.getElementById('imageThree');
-var resultParentElement = document.getElementById('results');
-var renderResultsElement = document.getElementById('submit-button');
-
-// This global variable is a counter for the event listener.
-var k = 0;
-
-
-// Feature tasks:
-
-// 1.1 Build a constructor function that creates an object associated with each product and has the following properties:
-// - Name of the product
-// - File path of the image
+// Constructor function and object instances.
 
 function Product(productName, filepath) {
   this.product = productName;
   this.filepath = filepath;
-  // 2.1 In the constructor function define a property to hold the number of times a product has been clicked.
-  this.votes = 0;
-  this.productDisplayCount = 0;
+  this.votes = 0; //This property holds the votes that each object instance receives.
+  this.productDisplayCount = 0; //This property contains the number of times a product has been displayed.
 
-  // 4.1: Create a property attached to the constructor function itself that keeps track of all the products that are currently being considered. [Not sure how to do this or what is being asked; created a running array of random numbers as a global variable called randomNumberSets.]
-
-  // Pushes the data processed by the constructor function into a global variable that holds an array.
-  allProducts.push(this);
-
+  allProducts.push(this); //This line pushes each of the above properties into the global array of the object instances.
 }
-//These are all of my object instances, which will feed the needed two arguments into the constructor function "Product", which in turn will populate the global variable "allProducts," which is an arry.
+
 new Product('bag', 'img/bag.jpg');
 new Product('banana', 'img/banana.jpg');
 new Product('bathroom', 'img/bathroom.jpg');
@@ -73,112 +46,127 @@ new Product('usb', 'img/usb.gif');
 new Product('water-can', 'img/water-can.jpg');
 new Product('wine-glass', 'img/wine-glass.jpg');
 
-// 1.2 Create an algorithm that will randomly generate three unique product images from the images directory and display them side-by-side-by-side in the browser window.
+// Helper and call-back functions.
 
-function render() {
-
-  var randomIndex1;
-  do {
-    randomIndex1 = getRandomNumber(0, allProducts.length - 1);
-  } while (recentRandomNumber.includes(randomIndex1));
-
-  allProducts[randomIndex1].productDisplayCount++;
-
-  recentRandomNumber.push(randomIndex1);
-  randomNumberSets.push(randomIndex1);
-
-  var randomIndex2;
-  do {
-    randomIndex2 = getRandomNumber(0, allProducts.length - 1);
-  } while (recentRandomNumber.includes(randomIndex2));
-
-  allProducts[randomIndex2].productDisplayCount++;
-
-  recentRandomNumber.push(randomIndex2);
-  randomNumberSets.push(randomIndex2);
-
-  var randomIndex3;
-  do {
-    randomIndex3 = getRandomNumber(0, allProducts.length - 1);
-  } while (recentRandomNumber.includes(randomIndex3));
-
-  allProducts[randomIndex3].productDisplayCount++;
-
-  recentRandomNumber.push(randomIndex3);
-  randomNumberSets.push(randomIndex3);
-
-  // console.log(recentRandomNumber); // This shows the last six new numbers (the current and penultimate set).
-
-  recentRandomNumber = [randomIndex1, randomIndex2, randomIndex3];
-
-  imageOneElement.src = allProducts[randomIndex1].filepath;
-  imageOneElement.alt = allProducts[randomIndex1].product;
-
-  imageTwoElement.src = allProducts[randomIndex2].filepath;
-  imageTwoElement.alt = allProducts[randomIndex2].product;
-
-  imageThreeElement.src = allProducts[randomIndex3].filepath;
-  imageThreeElement.alt = allProducts[randomIndex3].product;
-}
-
-// Helper functions
-// This generates a random number between a min and a max, inclusive, and rounds it down to the nearest whole number.
-function getRandomNumber(min, max){
+function getRandomNumber(min, max){ // This generates a random number between a defined min and max.
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-// This function is the event listener for clicks of the pictures.
-function handleClick(event) {
-  event.preventDefault();
-  // This removes the event listener. (In the case of this code base, it's redundant, because the maxClick variable's if statement immedidately following turns it off; but it's here per instructions and to imitate scalability.)
-  if (k >= 5) {
-    writeNewRandomImages.removeEventListener('click', handleClick);
+function renderImages(imageElement) { // This picks and renders the images.
+  var randomIndex = getRandomNumber(0, allProducts.length - 1);
+  while (recentRandomNumber.includes(randomIndex)) {
+    randomIndex = getRandomNumber(0, allProducts.length - 1); // This gets a new random number if the one just genearted matches any already in the recentRandomNumber array.
   }
-  // 3.1: By default, the user should be presented with 25 rounds of voting before ending the session.
-  // 3.2: Keep the number of rounds in a variable to allow the number to be easily changed for debugging and testing purposes.
-  var maxClick = 5;
-  if (k < maxClick) {
-    k++;
 
-    // 1.4: Once the user ‘clicks’ a product, generate three new products for the user to pick from.
-    render();
-    // 2.2: After every selection by the viewer, update the newly added property to reflect if it was clicked.
-    var productVote = event.target.alt;
+  imageElement.src = allProducts[randomIndex].filepath; // This gets the image associated with the random number and sends it to the parent to be written to the DOM.
+  imageElement.alt = allProducts[randomIndex].product; // This gets the name of the image associated with the random number and sends it to the parent to be written to the DOM.
 
-    for (var i = 0; i < allProducts.length; i++) {
-      if(productVote === allProducts[i].product) {
-        allProducts[i].votes++;
-      }
+  allProducts[randomIndex].productDisplayCount++; // This adds one to this object property for every time an image is displayed.
+
+  recentRandomNumber.push(randomIndex); // This pushes the random number into the recentRandomNumber array.
+  randomNumberSets.push(randomIndex); // This pushes the random number into the randomNumberSets array.
+
+  if (recentRandomNumber.length > 5) {
+    recentRandomNumber.shift();// This removes the first random number in the recentRandomNumber array when that array reaches six, so that there are no more than six numbers in the array at once.
+  }
+}
+
+function compileCountArrays() {
+  var productNames = [];
+  var productVotes = [];
+  var productDisplayCounts = [];
+
+  for (var i = 0; i < allProducts.length; i++) {
+    productNames.push(allProducts[i].product);
+    productVotes.push(allProducts[i].votes);
+    productDisplayCounts.push(allProducts[i].productDisplayCount);
+  }
+  return [productNames, productVotes, productDisplayCounts];
+}
+function handleClick(event) { // This is the call-back function that responds to clicks on images.
+  event.preventDefault();
+
+  var productVote = event.target.alt; // This stores the name of the image that was clicked.
+  for (var i = 0; i < allProducts.length; i++) {
+    if(productVote === allProducts[i].product) {
+      allProducts[i].votes++; // This puts votes into the array this.votes for each image that receives a vote.
     }
   }
-}
+  renderImages(imageOneElement);
+  renderImages(imageTwoElement);
+  renderImages(imageThreeElement);
 
-//This function is the event listener for the sumbit results button.
-function submitResults(event) {
-  event.preventDefault();
-  renderPollResults();
-
-}
-
-//This method writes the results to the DOM.
-Product.prototype.renderResults = function() {
-  var liElement = document.createElement('li');
-  liElement.textContent = `The ${this.product} product received ${this.votes} votes after being shown ${this.productDisplayCount} times.`;
-  resultParentElement.appendChild(liElement);
-};
-
-function renderPollResults() {
-  for (var j = 0; j < allProducts.length; j++) {
-    allProducts[j].renderResults();
+  maxClick++;
+  if (maxClick >= 25) {
+    writeNewRandomImages.removeEventListener('click', handleClick); // This removes the event listener after 25 clicks.
+    compileCountArrays();
+    displayChart();
   }
 }
 
-// 1.3 Attach an event listener to the section of the HTML page where the images are going to be displayed.
+
+// Chart.js code //
+
+function displayChart() {
+  var productPollCanvas = document.getElementById('myChart').getContext('2d');
+  var chartData = compileCountArrays();
+
+  var votingData = {
+    label: 'Total Votes',
+    data: chartData[1],
+    backgroundColor: 'rgba(128, 212, 255, 0.6)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 173, 51, 1)',
+    yAxisID: 'y-axis-votes'
+  };
+
+  var viewingData = {
+    label: 'Total Views',
+    data: chartData[2],
+    backgroundColor: 'rgba(255, 173, 51, 0.6)',
+    borderColor: 'rgba(128, 212, 255, 1)',
+    borderWidth: 1,
+    yAxisID: 'y-axis-views'
+  };
+
+  var productName = {
+    labels: chartData[0],
+    datasets: [votingData, viewingData],
+    barPercentage: 0.9,
+    barthickness: 'flex',
+    maxBarThickness: 20,
+    minBarLength: 2,
+  };
+
+  var canvasOptions = {
+    // backgroundColor: 'rgba(245, 245, 220, 1)', //Don't know where to put this to make it work.
+    scales: {
+      xAxes: [{
+        barPercentage: 1,
+        categoryPercentage: 0.6
+      }],
+      yAxes: [{
+        id: 'y-axis-views'
+      }, {
+        id: 'y-axis-votes'
+      }]
+    }
+  };
+
+  var myChart = new Chart(productPollCanvas, {
+    type: 'bar',
+    data: productName,
+    options: canvasOptions,
+  });
+}
+
+
+// Executable functions and event listeners.
+
 writeNewRandomImages.addEventListener('click', handleClick);
 
-//4.3 Add a button with the text View Results, which when clicked displays the list of all the products followed by the votes received, and number of times seen for each.
-renderResultsElement.addEventListener('click', submitResults);
+renderImages(imageOneElement);
+renderImages(imageTwoElement);
+renderImages(imageThreeElement);
 
-// These are the file's executable functions
-render();
-// renderPollResults();
+

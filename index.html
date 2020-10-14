@@ -9,10 +9,10 @@
 </head>
 <body>
   <header>
-    <section>
+    <section id="header-section">
       <div id="logo-title">
         <img src="" alt="logo">
-        <h1>Title</h1>
+        <h1>BusMall Poll</h1>
       </div>
       <div id="tabs">
         <h2>Home</h2>
@@ -24,21 +24,24 @@
   </header>
   <main>
     <section>
-      <button id="submit-button">Results</button>
       <ul id="results">
       </ul>
     </section>
     <section id="product-images">
-      <img id="imageOne" src="" alt="">
-      <img id="imageTwo"  src="" alt="">
-      <img id="imageThree" src="" alt="">
+      <img class="product-images" id="imageOne" src="" alt="">
+      <img class="product-images" id="imageTwo"  src="" alt="">
+      <img class="product-images" id="imageThree" src="" alt="">
     </section>
-    <section>
+    <section "chart-container">
+      <canvas id="myChart"></canvas>
+    </section>
+    <!-- <section>
       <!-- <button><strong>Vote Here</strong></button> -->
-    </section>
+    <!-- </section> -->
 
   </main>
   <footer></footer>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
