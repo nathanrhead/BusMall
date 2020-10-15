@@ -12,39 +12,20 @@ var imageThreeElement = document.getElementById('imageThree'); //Writes image th
 
 var writeNewRandomImages = document.getElementById('product-images'); //Writes click event listener to the DOM.
 
-var maxClick = 0; // This is a counter for the event listener that tracks the number of clicks, up to 25.
+var maxClick = 25; // This is a counter for the event listener that tracks the number of clicks, up to 25.
 
 // Constructor function and object instances.
 
-function Product(productName, filepath) {
+function Product(productName, filepath, votes = 0, productDisplayCount = 0) {
   this.product = productName;
   this.filepath = filepath;
-  this.votes = 0; //This property holds the votes that each object instance receives.
-  this.productDisplayCount = 0; //This property contains the number of times a product has been displayed.
+  this.votes = votes; //This property holds the votes that each object instance receives.
+  this.productDisplayCount = productDisplayCount; //This property contains the number of times a product has been displayed.
 
   allProducts.push(this); //This line pushes each of the above properties into the global array of the object instances.
 }
 
-new Product('bag', 'img/bag.jpg');
-new Product('banana', 'img/banana.jpg');
-new Product('bathroom', 'img/bathroom.jpg');
-new Product('boots', 'img/boots.jpg');
-new Product('breakfast', 'img/breakfast.jpg');
-new Product('bubblegum', 'img/bubblegum.jpg');
-new Product('chair', 'img/chair.jpg');
-new Product('cthulhu', 'img/cthulhu.jpg');
-new Product('dog-duck', 'img/dog-duck.jpg');
-new Product('dragon', 'img/dragon.jpg');
-new Product('pen', 'img/pen.jpg');
-new Product('pet-sweep', 'img/pet-sweep.jpg');
-new Product('scissors', 'img/scissors.jpg');
-new Product('shark', 'img/shark.jpg');
-new Product('sweep', 'img/sweep.png');
-new Product('tauntaun', 'img/tauntaun.jpg');
-new Product('unicorn', 'img/unicorn.jpg');
-new Product('usb', 'img/usb.gif');
-new Product('water-can', 'img/water-can.jpg');
-new Product('wine-glass', 'img/wine-glass.jpg');
+createProducts();
 
 // Helper and call-back functions.
 
@@ -95,15 +76,55 @@ function handleClick(event) { // This is the call-back function that responds to
   renderImages(imageOneElement);
   renderImages(imageTwoElement);
   renderImages(imageThreeElement);
+  localStorage.setItem('productData', JSON.stringify(allProducts)); // This writes allProducts to local storage after every click.
 
-  maxClick++;
-  if (maxClick >= 25) {
+  maxClick -= 1;
+  if (maxClick < 1) {
     writeNewRandomImages.removeEventListener('click', handleClick); // This removes the event listener after 25 clicks.
-    compileCountArrays();
-    displayChart();
+    compileCountArrays(); // This invokes the function to compile the names, votes, and display counts for the chart.
+    displayChart(); // This invokes the function to write the populate and write the chart to the DOM.
   }
 }
 
+function createProducts() {
+
+  if (localStorage.productData) {
+    var localStorageString = localStorage.getItem('productData');
+    var localStorageData = JSON.parse(localStorageString);
+
+    for (var i = 0; i < localStorageData.length; i++) {
+      var obj = localStorageData[i];
+      var filepath = obj.filepath;
+      var product = obj.product;
+      var productDisplayCount = obj.productDisplayCount;
+      var votes = obj.votes;
+      new Product(product, filepath, votes, productDisplayCount);
+    }
+    // Create products from old data
+  } else {
+    new Product('bag', 'img/bag.jpg');
+    new Product('banana', 'img/banana.jpg');
+    new Product('bathroom', 'img/bathroom.jpg');
+    new Product('boots', 'img/boots.jpg');
+    new Product('breakfast', 'img/breakfast.jpg');
+    new Product('bubblegum', 'img/bubblegum.jpg');
+    new Product('chair', 'img/chair.jpg');
+    new Product('cthulhu', 'img/cthulhu.jpg');
+    new Product('dog-duck', 'img/dog-duck.jpg');
+    new Product('dragon', 'img/dragon.jpg');
+    new Product('pen', 'img/pen.jpg');
+    new Product('pet-sweep', 'img/pet-sweep.jpg');
+    new Product('scissors', 'img/scissors.jpg');
+    new Product('shark', 'img/shark.jpg');
+    new Product('sweep', 'img/sweep.png');
+    new Product('tauntaun', 'img/tauntaun.jpg');
+    new Product('unicorn', 'img/unicorn.jpg');
+    new Product('usb', 'img/usb.gif');
+    new Product('water-can', 'img/water-can.jpg');
+    new Product('wine-glass', 'img/wine-glass.jpg');
+
+  }
+}
 
 // Chart.js code //
 
@@ -142,8 +163,6 @@ function displayChart() {
     // backgroundColor: 'rgba(245, 245, 220, 1)', //Don't know where to put this to make it work.
     scales: {
       xAxes: [{
-        barPercentage: 1,
-        categoryPercentage: 0.6
       }],
       yAxes: [{
         id: 'y-axis-views'
