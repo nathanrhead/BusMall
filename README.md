@@ -4,7 +4,6 @@
 
 This app is intended to fulfill the requirements set out in the description of lab 11, namely the following:
 
-
 ## Author: Nathan Cox/seattle-201d68
 
 ## Collaborators
@@ -22,6 +21,8 @@ Submission PR
 [Charts with Mulitple Datasets](https://codepen.io/Shokeen/pen/NpgbKg);
 
 ## Reflections and Comments
+
+This was a tricy assignment, which I woudldn't have completed without the help of Skyler, TA extraordinaire.
 
 ### Questions that occurred to me during the build
 
