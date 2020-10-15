@@ -1,6 +1,6 @@
 'use strict';
 
-// Global variables.
+// Global variables!
 
 var allProducts = []; //Array holding data for each object instance.
 var recentRandomNumber = []; //Array holding the last six random numbers generated.
