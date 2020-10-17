@@ -10,8 +10,7 @@ var imageOneElement = document.getElementById('imageOne'); // Writes image one t
 var imageTwoElement = document.getElementById('imageTwo'); // Writes image two to the DOM.
 var imageThreeElement = document.getElementById('imageThree'); // Writes image three to the DOM.
 
-var writeNewRandomImages = document.getElementById('product-images'); // Ties the click event listener to the id "product-images" on the index.html file.
-var submitForResults = document.getElementById('submit'); // Ties the submit button to the form in which the submit button input lives as a child. 
+var writeNewRandomImages = document.getElementById('product-images'); // Writes the click event listener to the DOM.
 
 var maxClick = 25; // This is a counter for the event listener that limits the number of clicks, or votes, to 25.
 
@@ -68,29 +67,24 @@ function compileCountArrays() { // This creates and populates arrays of names, v
 
 function handleClick(event) { // This is the call-back function that responds to clicks on images.
   event.preventDefault();
-  var productVote = event.target.alt; // This captures the name of the image that was clicked.
+
+  var productVote = event.target.alt; // This stores the name of the image that was clicked.
   for (var i = 0; i < allProducts.length; i++) {
     if(productVote === allProducts[i].product) {
-      allProducts[i].votes++; // This adds votes onto the appropriate object instance for each image that receives a vote per the if statement immediately above.
+      allProducts[i].votes++; // This puts votes into the array this.votes for each image that receives a vote.
     }
   }
   renderImages(imageOneElement);
   renderImages(imageTwoElement);
   renderImages(imageThreeElement);
-  localStorage.setItem('productData', JSON.stringify(allProducts)); // This writes allProducts to local storage after every click, updating the votes of corresponding object instances.
+  localStorage.setItem('productData', JSON.stringify(allProducts)); // This writes allProducts to local storage after every click.
 
   maxClick -= 1;
   if (maxClick < 1) {
-    writeNewRandomImages.removeEventListener('click', handleClick); // This removes the event listener after 25 clicks on the images.
+    writeNewRandomImages.removeEventListener('click', handleClick); // This removes the event listener after 25 clicks.
     compileCountArrays(); // This invokes the function to compile the names, votes, and display counts for the chart.
-
-    submitForResults.addEventListener('submit', handleSubmit); // This activates the submit button, which doesn't work until the voter has finished 25 rounds.
+    displayChart(); // This invokes the function to populate and write the chart to the DOM.
   }
-}
-
-function handleSubmit(event) { // This is the call-back function that is put into action when the user clicks the submit button.
-  event.preventDefault();
-  displayChart(); // This invokes the function to populate and write the chart to the DOM.
 }
 
 function createProducts() { // This creates all object instances in two stages, depending on whether there is anything in local storage or not.
