@@ -2,32 +2,32 @@
 
 // Global variables!
 
-var allProducts = []; //Array holding data for each object instance.
-var recentRandomNumber = []; //Array holding the last six random numbers generated.
-var randomNumberSets = []; //Array holding all of the random numbers for this session.
+var allProducts = []; // Array holding data for each object instance.
+var recentRandomNumber = []; // Array holding the last six random numbers generated.
+var randomNumberSets = []; // Array holding all of the random numbers for this session.
 
-var imageOneElement = document.getElementById('imageOne'); //Writes image one to the DOM.
-var imageTwoElement = document.getElementById('imageTwo'); //Writes image two to the DOM.
-var imageThreeElement = document.getElementById('imageThree'); //Writes image three to the DOM.
+var imageOneElement = document.getElementById('imageOne'); // Writes image one to the DOM.
+var imageTwoElement = document.getElementById('imageTwo'); // Writes image two to the DOM.
+var imageThreeElement = document.getElementById('imageThree'); // Writes image three to the DOM.
 
-var writeNewRandomImages = document.getElementById('product-images'); //Writes click event listener to the DOM.
+var writeNewRandomImages = document.getElementById('product-images'); // Writes the click event listener to the DOM.
 
-var maxClick = 25; // This is a counter for the event listener that tracks the number of clicks, up to 25.
+var maxClick = 25; // This is a counter for the event listener that limits the number of clicks, or votes, to 25.
 
-// Constructor function and object instances.
+// Constructor function: this is the factory that makes all of the object instances.
 
 function Product(productName, filepath, votes = 0, productDisplayCount = 0) {
   this.product = productName;
   this.filepath = filepath;
-  this.votes = votes; //This property holds the votes that each object instance receives.
-  this.productDisplayCount = productDisplayCount; //This property contains the number of times a product has been displayed.
+  this.votes = votes; // This property holds the votes that each object instance receives.
+  this.productDisplayCount = productDisplayCount; // This property contains the number of times a product has been displayed.
 
-  allProducts.push(this); //This line pushes each of the above properties into the global array of the object instances.
+  allProducts.push(this); // This line pushes each of the above properties into the global array that holds the object instances.
 }
 
-createProducts();
-
 // Helper and call-back functions.
+
+createProducts(); // This calls the createProducts function and is placed here so that the if/else statement in it that checks the local storage runs before anything else.
 
 function getRandomNumber(min, max){ // This generates a random number between a defined min and max.
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -52,7 +52,7 @@ function renderImages(imageElement) { // This picks and renders the images.
   }
 }
 
-function compileCountArrays() {
+function compileCountArrays() { // This creates and populates arrays of names, votes and display counts to be used as data for the bar chart.
   var productNames = [];
   var productVotes = [];
   var productDisplayCounts = [];
@@ -64,6 +64,7 @@ function compileCountArrays() {
   }
   return [productNames, productVotes, productDisplayCounts];
 }
+
 function handleClick(event) { // This is the call-back function that responds to clicks on images.
   event.preventDefault();
 
@@ -86,7 +87,7 @@ function handleClick(event) { // This is the call-back function that responds to
   }
 }
 
-function createProducts() {
+function createProducts() { // This creates all object instances in two stages, depending on whether there is anything in local storage or not.
 
   if (localStorage.productData) {
     var localStorageString = localStorage.getItem('productData');
@@ -94,13 +95,13 @@ function createProducts() {
 
     for (var i = 0; i < localStorageData.length; i++) {
       var obj = localStorageData[i];
-      var filepath = obj.filepath;
       var product = obj.product;
-      var productDisplayCount = obj.productDisplayCount;
+      var filepath = obj.filepath;
       var votes = obj.votes;
+      var productDisplayCount = obj.productDisplayCount;
       new Product(product, filepath, votes, productDisplayCount);
     }
-    // Create products from old data
+    // The else tells the JS engine to create the first set of object instances; thereafter, every subsequent iteration is created by the by for loop immediately above, the if statement being satisfied by the existence of the first set in local storage.
   } else {
     new Product('bag', 'img/bag.jpg');
     new Product('banana', 'img/banana.jpg');

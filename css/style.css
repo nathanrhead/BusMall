@@ -48,7 +48,6 @@ div[id="logo-title"] img {
   color: black;
 }
 
-
 /* This is the title */
 h1 {
   width: auto;
@@ -79,6 +78,19 @@ border-color: rgba(255, 173, 51, 1);
 width: 75px;
 }
 
+main {
+  background-color: beige;
+}
+
+fieldset {
+  display: flex;
+  justify-content: space-between;
+  border: 2px solid rgba(255, 173, 51, 1);;
+  margin: 10px 0px;
+  padding: 10px;
+  background-color:  rgba(128, 212, 255, 1);
+}
+
 /* This is the container of the images */
 #product-images {
   display: flex;
@@ -101,4 +113,13 @@ width: 75px;
 #myChart {
   height: 600px !important;
   width: 960px !important;
+}
+
+footer {
+  height: 100px;
+  width: 960px;
+  background-color:  rgba(128, 212, 255, 1);
+  border: 5px solid beige;
+  margin-bottom: 50px;
+  box-sizing: border-box;
 }
