@@ -11,7 +11,7 @@ var imageTwoElement = document.getElementById('imageTwo'); // Writes image two t
 var imageThreeElement = document.getElementById('imageThree'); // Writes image three to the DOM.
 
 var writeNewRandomImages = document.getElementById('product-images'); // Ties the click event listener to the id "product-images" on the index.html file.
-var submitForResults = document.getElementById('submit'); // Ties the submit button to the form in which the submit button input lives as a child. 
+var submitForResults = document.getElementById('submit'); // Ties the submit button to the form in which the submit button input lives as a child.
 
 var maxClick = 25; // This is a counter for the event listener that limits the number of clicks, or votes, to 25.
 
@@ -78,7 +78,7 @@ function handleClick(event) { // This is the call-back function that responds to
   renderImages(imageTwoElement);
   renderImages(imageThreeElement);
   localStorage.setItem('productData', JSON.stringify(allProducts)); // This writes allProducts to local storage after every click, updating the votes of corresponding object instances.
-
+  '';
   maxClick -= 1;
   if (maxClick < 1) {
     writeNewRandomImages.removeEventListener('click', handleClick); // This removes the event listener after 25 clicks on the images.
