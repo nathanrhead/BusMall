@@ -186,7 +186,6 @@ function displayChart() {
   });
 }
 
-
 // Executable functions and event listeners.
 
 writeNewRandomImages.addEventListener('click', handleClick);
@@ -194,5 +193,3 @@ writeNewRandomImages.addEventListener('click', handleClick);
 renderImages(imageOneElement);
 renderImages(imageTwoElement);
 renderImages(imageThreeElement);
-
-
